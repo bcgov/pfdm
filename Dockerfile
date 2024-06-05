@@ -89,24 +89,12 @@ RUN a2enmod remoteip \
 # Enable apache modules
   && a2enmod rewrite headers
 
-
-
-# Install NPM
-RUN apt-get install -y ca-certificates gnupg \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    NODE_MAJOR=20 \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
-    apt-get update && apt-get install nodejs -y && apt-get install -y npm
-
 RUN apt-get autoclean && apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/* \
 #fix Action '-D FOREGROUND' failed.
     && a2enmod lbmethod_byrequests \
     && mkdir -p /var/log/php  \
     && printf 'error_log=/var/log/php/error.log\nlog_errors=1\nerror_reporting=E_ALL\nmemory_limit=450M\n' > /usr/local/etc/php/conf.d/custom.ini \
     && mkdir -p /etc/apache2/sites-enabled
-
-# Composer
-RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /
 COPY openshift/apache-oc/image-files/ /
@@ -136,34 +124,19 @@ RUN sed -i -e 's/80/8080/g' -e 's/443/8443/g' -e 's/25/2525/g' /etc/apache2/port
     && a2query -M \
     && a2query -m \
     && chmod a+rx /docker-bin/*.sh \
-    && /docker-bin/docker-build.sh && export COMPOSER_HOME="$HOME/.config/composer";
-
+    && /docker-bin/docker-build.sh 
+	
 COPY entrypoint.sh /sbin/entrypoint.sh
 COPY / /var/www/html/
 
 WORKDIR /var/www/html/
 
-RUN mkdir -p storage && mkdir -p bootstrap/cache && chmod -R ug+rwx storage bootstrap/cache \
-    && cd /var/www && chown -R ${USER_ID}:root html && chmod -R ug+rw html \
-    && chmod 764 /var/www/html/artisan \
-#Error: EACCES: permission denied, open '/var/www/html/public/mix-manifest.json' \
-    && cd /var/www/html/public && chmod 766 mix-manifest.json \
-    && mkdir /.npm && mkdir /.npm/_cache && chown -R ${USER_ID}:0 "/.npm" \
-#Writing to directory /.config/psysh is not allowed.
-    && mkdir -p /.config/psysh && chown -R ${USER_ID}:root /.config && chmod -R 755 /.config \
-    && mkdir -p /.composer && chown -R ${USER_ID}:root /.composer && chmod -R 755 /.composer \
-    && echo "<?php return ['runtimeDir' => '/tmp'];" >> /.config/psysh/config.php \
 # Clean up \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 #openshift will complaine about permission \
     && chmod +x /sbin/entrypoint.sh
 USER ${USER_ID}
-
-#rm -rf vendor
-#rm -f composer.lock
-#composer install
-RUN composer install && npm install --prefix /var/www/html/ && npm run --prefix /var/www/html/ prod
 
 ENTRYPOINT ["/sbin/entrypoint.sh"]
 # Start!
