@@ -132,7 +132,7 @@ COPY / /var/www/html/
 WORKDIR /var/www/html/
 
 # Clean up \
-    && apt-get clean \
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 #openshift will complaine about permission \
     && chmod +x /sbin/entrypoint.sh
