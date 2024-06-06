@@ -72,7 +72,7 @@ jobs:
       NAMESPACE: caeb60-dev
       BUILD_NAMESPACE: caeb60-tools
       BUILD_REF: ${{ github.base_ref }}
-      HOST_PREFIX: pdfm
+      HOST_PREFIX: pfdm
       SOURCE_REPOSITORY_BRANCH: dev
     needs:
       - build
