@@ -1,8 +1,8 @@
 #!/bin/sh
 
-### Check if vendor directory does not exist ###
+### Check if html directory does not exist ###
 ### composer did not install ###
-if [ ! -d "/var/www/html/vendor" ]; then
+if [ ! -d "/var/www/html" ]; then
     exit 1
 fi
 exit 0
