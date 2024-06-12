@@ -2,7 +2,7 @@
 # like Pillow and psycopg2
 # See http://bitly.com/wheel-building-fails-CPython-35
 # Verified bug on Python 3.5.1
-wheel==0.29.0
+wheel==0.43.0
 
 # Django
 django==1.11.4
@@ -16,7 +16,7 @@ django-crispy-forms==1.6.1
 django-model-utils==2.6
 
 # Images
-Pillow==4.0.0
+Pillow==10.3.0
 
 # For user registration, either via email or social
 # Well-built with regular release cycles!
