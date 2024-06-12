@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9
 ENV PYTHONUNBUFFERED 1
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
