@@ -7,7 +7,8 @@ COPY ./requirements /requirements
 RUN pip install --upgrade pip \
 	&& pip install -r /requirements/production.txt \
     && groupadd -r django \
-    && useradd -r -g django django
+    && useradd -r -g django django notebook
+
 
 COPY . /app
 RUN chown -R django /app
