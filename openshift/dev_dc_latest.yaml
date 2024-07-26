@@ -64,6 +64,9 @@ objects:
             - name: site-data-volume
               configMap:
                 name: subpath-env
+            - name: configs
+              configMap:
+                name: "${NAME}"
           containers:
             - image: "${NOTEBOOK_IMAGE}"
               volumeMounts:
@@ -125,11 +128,7 @@ objects:
                 valueFrom:
                   secretKeyRef:
                     name: pfdm-patroni-creds
-                    key: database-name
-              volumes:
-              - configMap:
-                  name: "${NAME}"
-                  name: configs
+                    key: database-name 
   - apiVersion: route.openshift.io/v1
     kind: Route
     spec:
@@ -194,8 +193,6 @@ objects:
             deploymentconfig: ${NAME}
         ingress:
           - ports:
-            - protocol: TCP
-              port: 8888
             - protocol: TCP
               port: 8080
             - protocol: TCP
