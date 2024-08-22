@@ -8,6 +8,8 @@ RUN pip install --upgrade pip \
 	&& pip install -r /requirements/production.txt \
     && groupadd -r django \
     && useradd -r -g django django
+RUN pip install notebook
+RUN mkdir /.local && chmod 777 /.local
 
 COPY . /app
 RUN chown -R django /app

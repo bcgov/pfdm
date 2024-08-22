@@ -11,6 +11,9 @@ fi
 
 chmod 766 /var/www/html/probe-check.sh
 
+echo "jupyter notebook"
+jupyter notebook
+
 echo "End entrypoint"
 while :; do
 sleep 300
