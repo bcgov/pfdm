@@ -1,0 +1,207 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+objects:
+  - apiVersion: v1
+    kind: Service
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+        - name: 8081-tcp
+          port: 8081
+          protocol: TCP
+          targetPort: 8081
+      selector:
+        deploymentconfig: ${NAME}
+        app: ${NAME}
+    metadata:
+      name: ${NAME}
+      labels:
+        deploymentconfig: ${NAME}
+        app: ${NAME}
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: ${NAME}
+      labels:
+        deploymentconfig: ${NAME}
+        app.kubernetes.io/part-of: ${LABEL_NAME}
+        app: ${NAME}
+    spec:
+      triggers:
+        - type: "ConfigChange"
+      replicas: ${{MIN_REPLICAS}}
+      revisionHistoryLimit: 5
+      selector:
+        deploymentconfig: ${NAME},
+        app: ${NAME}
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            deploymentconfig: ${NAME}
+            app: ${NAME}
+        spec:
+          volumes:
+            - name: data,
+              persistentVolumeClaim: 
+                claimName: ${NAME}-data
+          initContainers: 
+            - name: setup-volume,
+              image: ${NOTEBOOK_IMAGE}
+              command: 
+              - setup-volume.sh
+              - /opt/app-root
+              - /mnt/app-root
+              resources:
+                limits:
+                  memory: 256Mi
+              volumeMounts:
+                - name: data
+                  mountPath: /mnt
+          containers:
+            - image: ${NOTEBOOK_IMAGE}
+              volumeMounts:
+                - name: data
+                  mountPath: /opt/app-root
+                  subpath: app-root
+              name: notebook
+              automountServiceAccountToken: false
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+                - containerPort: 8081
+                  protocol: TCP
+              resources:
+                limits:
+                  cpu: ${CPU_LIMITS}
+                  memory: ${MEM_LIMITS}
+                requests:
+                  cpu: ${CPU_REQUESTS}
+                  memory: ${MEM_REQUESTS}
+              env:
+              - name: JUPYTER_NOTEBOOK_PASSWORD
+                value: "${NOTEBOOK_PASSWORD}"
+              - name: DB_PORT
+                value: "$(PFDM_PATRONI_MASTER_SERVICE_PORT)"
+              - name: DB_HOST
+                value: "$(PFDM_PATRONI_MASTER_SERVICE_HOST)"
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-user
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-password
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-name 
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    spec:
+      host: ''
+      port:
+        targetPort: 8080-tcp
+      to:
+        kind: Service
+        name: ${NAME}
+        weight: 100
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+    metadata:
+      name: ${NAME}
+      labels:
+        deploymentconfig: ${NAME}
+        app: ${NAME}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata: 
+      name: ${NAME}-data,
+      labels:
+        app: ${NAME}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${VOLUME_SIZE}
+  - apiVersion: autoscaling.k8s.io/v1
+    kind: VerticalPodAutoscaler
+    metadata:
+      name: ${NAME}
+      labels:
+        deploymentconfig: ${NAME}
+    spec:
+      targetRef:
+        kind: DeploymentConfig
+        name: ${NAME}
+        apiVersion: apps.openshift.io/v1
+      updatePolicy:
+        updateMode: "Recreate"
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: db-allow-internal
+      spec:
+        podSelector:
+          matchLabels:
+            cluster-name: ${PATRONI_NAME}
+        ingress:
+          - from:
+            - podSelector: {}
+        policyTypes:
+          - Ingress     
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: ${NAME}-allow-external
+      spec:
+        podSelector:
+          matchLabels:
+            deploymentconfig: ${NAME}
+        ingress:
+          - ports:
+            - protocol: TCP
+              port: 8080
+            - protocol: TCP
+              port: 8081
+        policyTypes:
+          - Ingress
+parameters:
+  - name: NAME
+    value: custom-notebook
+    required: true
+  - name: LABEL_NAME
+    required: true
+  - name: CPU_REQUESTS
+    required: true
+  - name: CPU_LIMITS
+    required: true
+  - name: MEM_REQUESTS
+    required: true
+  - name: MEM_LIMITS
+    required: true
+  - name: MIN_REPLICAS
+    required: true
+  - name: PATRONI_NAME
+    value: pfdm-patroni
+    required: true
+  - name: VOLUME_SIZE
+    required: true
+  - name: NOTEBOOK_IMAGE
+    value: quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:2.5.1
+    required: true
+  - name: NOTEBOOK_INTERFACE
+    value: lab
+  - name: NOTEBOOK_PASSWORD
+    from: "[a-f0-9]{32}"
+    generate: expression      
