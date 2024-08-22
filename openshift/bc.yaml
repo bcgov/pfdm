@@ -123,3 +123,5 @@ parameters:
     required: false
   - name: VAULT_ENV
     required: false
+  - name: VOLUME_SIZE
+    required: false
