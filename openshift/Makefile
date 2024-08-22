@@ -16,7 +16,7 @@ export BACKUP_CONFIGMAP_NAME := $(or $(BACKUP_CONFIGMAP_NAME), pfdm-patroni-back
 ##if
 ifeq ($(GIT_LOCAL_BRANCH),dev)
 define DEPLOY_FILE
-"dev_dc_latest.yaml"
+"custom-notebook-dc.yaml"
 endef
 define OC_USER_ID
 "1009370000"
