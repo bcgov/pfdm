@@ -20,14 +20,6 @@ objects:
       name: ${NAME}
       labels:
         deploymentconfig: ${NAME}
-  - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: ${NAME}
-      labels:
-        deploymentconfig: ${NAME}
-    data:
-      jupyter_server_config.py: "import os\n\npassword = os.environ.get('JUPYTER_NOTEBOOK_PASSWORD')\n\nif password:\n    from jupyter_server.auth import passwd\n    c.ServerApp.password = passwd(password)\n    del password\n    del os.environ['JUPYTER_NOTEBOOK_PASSWORD']\n\nimage_config_file = '/home/jovyan/.jupyter/jupyter_server_config.py'\n\nif os.path.exists(image_config_file):\n    with open(image_config_file) as fp:\n        exec(compile(fp.read(), image_config_file, 'exec'), globals())\n    "
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
@@ -64,23 +56,14 @@ objects:
             - name: site-data-volume
               configMap:
                 name: subpath-env
-            - name: configs
-              configMap:
-                name: "${NAME}"
           containers:
-            - image: "${NOTEBOOK_IMAGE}"
+            - image: >-
+                image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NAME}
               volumeMounts:
                 - name: site-data-volume
                   mountPath: /var/site_data
-                - mountPath: "/etc/jupyter/openshift"
-                  name: configs
               imagePullPolicy: Always
               name: ${NAME}
-              command:
-              - start-notebook.py
-              - "--config=/etc/jupyter/openshift/jupyter_server_config.py"
-              - "--no-browser"
-              - "--ip=0.0.0.0"
               ports:
                 - containerPort: 8080
                   protocol: TCP
@@ -108,27 +91,6 @@ objects:
               env:
               - name: "ENV_ARG"
                 value: "hi there"
-              - name: JUPYTER_NOTEBOOK_PASSWORD
-                value: "${NOTEBOOK_PASSWORD}"
-              - name: DB_PORT
-                value: "$(PFDM_PATRONI_MASTER_SERVICE_PORT)"
-              - name: DB_HOST
-                value: "$(PFDM_PATRONI_MASTER_SERVICE_HOST)"
-              - name: DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: pfdm-patroni-creds
-                    key: database-user
-              - name: DB_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: pfdm-patroni-creds
-                    key: database-password
-              - name: DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    name: pfdm-patroni-creds
-                    key: database-name 
   - apiVersion: route.openshift.io/v1
     kind: Route
     spec:
@@ -250,9 +212,3 @@ parameters:
     required: false
   - name: BUILD_MEM_LIMITS
     required: false
-  - name: NOTEBOOK_IMAGE
-    value: docker.io/jupyter/scipy-notebook:latest
-    required: true
-  - name: NOTEBOOK_PASSWORD
-    from: "[a-f0-9]{32}"
-    generate: expression
