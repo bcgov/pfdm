@@ -204,4 +204,33 @@ parameters:
     value: lab
   - name: NOTEBOOK_PASSWORD
     from: "[a-f0-9]{32}"
-    generate: expression      
+    generate: expression   
+
+  - name: OC_USER_ID
+    required: false
+  - name: NAMESPACE
+    required: false
+  - name: IMAGE_TAG
+    required: false
+  - name: LICENSE_PLATE
+    required: false
+  - name: LICENSE_BRANCH
+    required: false
+  - name: VAULT_ENV
+    required: false
+  - name: BUILD_NAMESPACE
+    required: false
+  - name: REPO_BRANCH
+    required: false
+  - name: REPO_NAME
+    required: false
+  - name: MAX_REPLICAS
+    required: false
+  - name: BUILD_CPU_REQUESTS
+    required: false
+  - name: BUILD_CPU_LIMITS
+    required: false
+  - name: BUILD_MEM_REQUESTS
+    required: false
+  - name: BUILD_MEM_LIMITS
+    required: false   
