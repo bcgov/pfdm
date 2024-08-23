@@ -51,7 +51,7 @@ objects:
                 claimName: ${NAME}-data
           initContainers: 
             - name: setup-volume
-              image: ${NOTEBOOK_IMAGE}
+              image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
               command: 
               - setup-volume.sh
               - /opt/app-root
