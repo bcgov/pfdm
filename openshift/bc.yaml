@@ -96,7 +96,7 @@ objects:
         git:
           uri: ${REPO_NAME}
           ref: ${REPO_BRANCH}
-        contextDir: minimal-notebook
+        contextDir: openshift/minimal-notebook
       strategy:
         type: Source
         sourceStrategy:
