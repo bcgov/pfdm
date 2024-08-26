@@ -51,11 +51,12 @@ mv /tmp/src/supervisor /opt/app-root/etc/supervisor
 
 mv /tmp/src/gateway /opt/app-root/gateway
 
+cp /tmp/src/*.sh /opt/app-root/src
 mv /tmp/src/*.sh /opt/app-root/bin
-ls 
-PATH=/usr/bin:$PATH
+
+PATH=/opt/app-root/bin:$PATH
 HOME=/opt/app-root
-ls 
+
 # Install oc command line client for OpenShift cluster.
 
 curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.11.153/linux/oc.tar.gz && \
