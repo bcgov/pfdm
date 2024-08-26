@@ -54,8 +54,6 @@ mv /tmp/src/gateway /opt/app-root/gateway
 cp /tmp/src/*.sh /opt/app-root/src
 mv /tmp/src/*.sh /opt/app-root/bin
 
-PATH=/opt/app-root/bin:$PATH
-HOME=/opt/app-root
 
 # Install oc command line client for OpenShift cluster.
 
