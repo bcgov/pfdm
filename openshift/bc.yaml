@@ -84,7 +84,7 @@ objects:
   - kind: BuildConfig
     apiVersion: build.openshift.io/v1
     metadata:
-      name: s2i-minimal-notebook-py38
+      name: s2i-minimal-notebook-py36
       labels:
         build: s2i-minimal-notebook
     spec:
@@ -102,12 +102,12 @@ objects:
         sourceStrategy:
           from:
             kind: ImageStreamTag
-            name: 'python:3.8'
+            name: 'python:3.6'
             namespace: openshift
       output:
         to:
           kind: ImageStreamTag
-          name: 's2i-minimal-notebook:3.8'
+          name: 's2i-minimal-notebook:3.6'
       resources:
         limits:
           memory: 1Gi
