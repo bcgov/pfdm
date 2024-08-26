@@ -51,7 +51,7 @@ objects:
                 claimName: ${NAME}-data
           initContainers: 
             - name: setup-volume
-              image: ${NOTEBOOK_IMAGE}
+              image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
               command: 
               - setup-volume.sh
               - /opt/app-root
@@ -63,7 +63,7 @@ objects:
                 - name: data
                   mountPath: /mnt
           containers:
-            - image: ${NOTEBOOK_IMAGE}
+            - image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
               volumeMounts:
                 - name: data
                   mountPath: /opt/app-root
@@ -151,31 +151,31 @@ objects:
     kind: NetworkPolicy
     metadata:
       name: db-allow-internal
-      spec:
-        podSelector:
-          matchLabels:
-            cluster-name: ${PATRONI_NAME}
-        ingress:
-          - from:
-            - podSelector: {}
-        policyTypes:
-          - Ingress
+    spec:
+      podSelector:
+        matchLabels:
+          cluster-name: ${PATRONI_NAME}
+      ingress:
+      - from:
+        - podSelector: {}
+      policyTypes:
+        - Ingress
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
       name: ${NAME}-allow-external
-      spec:
-        podSelector:
-          matchLabels:
-            deploymentconfig: ${NAME}
-        ingress:
-          - ports:
-            - protocol: TCP
-              port: 8080
-            - protocol: TCP
-              port: 8081
-        policyTypes:
-          - Ingress
+    spec:
+      podSelector:
+        matchLabels:
+          deploymentconfig: ${NAME}
+      ingress:
+      - ports:
+        - protocol: TCP
+          port: 8080
+        - protocol: TCP
+          port: 8081
+      policyTypes:
+        - Ingress
 parameters:
   - name: NAME
     value: custom-notebook
@@ -198,7 +198,7 @@ parameters:
   - name: VOLUME_SIZE
     required: true
   - name: NOTEBOOK_IMAGE
-    value: quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:2.5.1
+    value: s2i-minimal-notebook:3.8
     required: true
   - name: NOTEBOOK_INTERFACE
     value: lab
@@ -219,7 +219,7 @@ parameters:
   - name: VAULT_ENV
     required: false
   - name: BUILD_NAMESPACE
-    required: false
+    required: true
   - name: REPO_BRANCH
     required: false
   - name: REPO_NAME
