@@ -13,6 +13,6 @@ fi
 
 cd /opt/app-root/gateway
 
-source scl_source enable rh-nodejs14
+source scl_source enable rh-nodejs10
 
 exec npm start
