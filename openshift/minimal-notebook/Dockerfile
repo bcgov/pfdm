@@ -9,10 +9,14 @@ RUN rm -rf /tmp/src/.git* && \
     chgrp -R 0 /tmp/src && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
-    mv /tmp/src/.s2i/bin /tmp/scripts && \
+    mv /tmp/src/.s2i/bin /tmp/scripts   
+    
+RUN chown -R 1001 /tmp/scripts && \
     ls -l /tmp/scripts
 
 USER 1001
+
+RUN ls -l /tmp/scripts
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
