@@ -8,8 +8,12 @@ RUN rm -rf /tmp/src/.git* && \
     chown -R 1001 /tmp/src && \
     chgrp -R 0 /tmp/src && \
     chmod -R g+w /tmp/src && \
-    chmod +x /opt/app-root/bin && \
-    chmod +x /opt/app-root/bin/setup-volume.sh && \
+    chgrp -R 0 /opt/app-root/bin && \
+    chmod -R g=u /opt/app-root/bin && \
+    chgrp -R 0 /opt/app-root && \
+    chmod -R g=u /opt/app-root && \
+    chgrp -R 0 /opt/app-root/bin/setup-volume.sh && \
+    chmod -R g=u /opt/app-root/bin/setup-volume.sh && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts
 
