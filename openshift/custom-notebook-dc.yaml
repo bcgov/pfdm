@@ -53,7 +53,7 @@ objects:
             - name: setup-volume
               image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
               command: 
-              - setup-volume.sh
+              - ../bin/setup-volume.sh
               - /opt/app-root
               - /mnt/app-root
               resources:
