@@ -9,16 +9,14 @@ RUN rm -rf /tmp/src/.git* && \
     chgrp -R 0 /tmp/src && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
-    mv /tmp/src/.s2i/bin /tmp/scripts &&\
-    chmod +x /opt/app-root/bin/setup-volume.sh
+    mv /tmp/src/.s2i/bin /tmp/scripts
 
 RUN chgrp -R 0 /opt/app-root/bin && \
     chmod -R g=u /opt/app-root/bin && \
     chgrp -R 0 /opt/app-root && \
     chmod -R g=u /opt/app-root && \
-    chgrp -R 0 /opt/app-root/bin/setup-volume.sh && \
-    chmod -R g=u /opt/app-root/bin/setup-volume.sh && \
-    chmod +x /opt/app-root/bin/setup-volume.sh
+    chmod +x /opt/app-root/bin/setup-volume.sh && \
+    ls -l /opt/app-root/bin/setup-volume.sh
 
 USER 1001
 
