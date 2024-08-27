@@ -12,6 +12,7 @@ export HOST_PREFIX := $(or $(HOST_PREFIX), pfdm)
 export SOURCE_REPOSITORY_BRANCH := $(or $(SOURCE_REPOSITORY_BRANCH), dev)
 export BACKUP_POSTGRESQL_APP_NAME := $(or $(BACKUP_POSTGRESQL_APP_NAME), pfdm-patroni-backup)
 export BACKUP_CONFIGMAP_NAME := $(or $(BACKUP_CONFIGMAP_NAME), pfdm-patroni-backup-conf)
+export NAME := $(or $(NAME), custom-notebook)
 
 ##if
 ifeq ($(GIT_LOCAL_BRANCH),dev)
@@ -96,7 +97,8 @@ print-status:
 	@echo " | BUILD_ID:						$(BUILD_ID) |"
 	@echo " | BUILD_TAG:						$(BUILD_TAG) |"
 	@echo " | HOST: 	$(HOST) |"
-	@echo " | NAME:					$(HOST_PREFIX) |"
+	@echo " | NAME:					$(NAME) |"
+	@echo " | HOST_PREFIX:					$(HOST_PREFIX) |"
 	@echo " | REPO_NAME: 		$(SOURCE_REPOSITORY_REF) |"
 	@echo " | REPO_BRANCH:						$(SOURCE_REPOSITORY_BRANCH) |"
 	@echo " | OC_USER_ID: 					$(OC_USER_ID) |"
@@ -113,7 +115,7 @@ build-web:
 	@echo "+\n++ PROCESSING Web\n+"
 	@oc -n $(BUILD_NAMESPACE) process -f bc.yaml --param-file=$(PARAM_FILE) | oc -n $(BUILD_NAMESPACE) apply -f -
 	@echo "+\n++ BUILDING Web\n+"
-	@oc -n $(BUILD_NAMESPACE) start-build bc/$(HOST_PREFIX) --wait
+	@oc -n $(BUILD_NAMESPACE) start-build bc/$(NAME) --wait
 	@echo "+\n++ FINISHED BUILDING Web\n+"
 
 deploy-web:
@@ -122,7 +124,7 @@ deploy-web:
 	test -n "$(BUILD_NAMESPACE)"
 	@echo "+\n++ Deploying Web into $(NAMESPACE)\n+"
 	@oc -n $(NAMESPACE) process -f $(DEPLOY_FILE) --param-file=$(PARAM_FILE) | oc -n $(NAMESPACE) apply -f -
-	$(call rollout_and_wait,dc/$(HOST_PREFIX))
+	$(call rollout_and_wait,dc/$(NAME))
 	@echo "+\n++ FINISHED Deploying Web\n+"
 
 build-patroni:
