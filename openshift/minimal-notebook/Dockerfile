@@ -5,12 +5,20 @@ COPY . /tmp/src
 RUN chown -R notebook:notebook /tmp
 
 RUN rm -rf /tmp/src/.git* && \
+    chown -R notebook /tmp/src && \
+    chgrp -R notebook /tmp/src && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts   
     
 RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
+    
+USER notebook
+
+RUN /tmp/scripts/assemble
+
+RUN chown -R notebook:notebook /opt/app-root/
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -18,11 +26,6 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.tags="builder,jupyter" \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
-RUN /tmp/scripts/assemble
-
-RUN chown -R notebook:notebook /opt/app-root/
-
-USER notebook
 RUN chmod -R +x /opt/app-root/bin/ && \
     ls -l /opt/app-root/bin/
 
