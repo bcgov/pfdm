@@ -11,8 +11,7 @@ RUN rm -rf /tmp/src/.git* && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts   
     
-RUN chown -R 1001:0 /tmp/scripts && \
-    chmod +x /tmp/scripts/assemble && \
+RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
 
 USER 1001
@@ -26,5 +25,8 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
 RUN /tmp/scripts/assemble
+
+RUN chmod +x /opt/app-root/bin/setup-volume.sh && \
+    ls -l /opt/app-root/bin/setup-volume.sh 
 
 CMD [ "/opt/app-root/builder/run" ]
