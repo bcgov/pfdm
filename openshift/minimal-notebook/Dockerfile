@@ -33,6 +33,7 @@ RUN chgrp -R 0 /opt/app-root/bin && \
     chmod 775 /opt/app-root/bin/setup-volume.sh && \
     ls -l /opt/app-root/bin/
 
+USER root
 RUN /opt/app-root/bin/setup-volume.sh /opt/app-root /mnt/app-root
 
 
