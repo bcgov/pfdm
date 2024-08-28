@@ -13,10 +13,10 @@ RUN rm -rf /tmp/src/.git* && \
     
 RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
-    
-USER notebook
 
 RUN /tmp/scripts/assemble
+
+USER notebook
 
 RUN chown -R notebook:notebook /opt/app-root/
 
