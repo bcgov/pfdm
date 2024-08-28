@@ -1,10 +1,9 @@
 FROM centos/python-38-centos7:latest
 USER root
-RUN adduser -ms /bin/bash notebook && chown -R notebook:notebook /tmp && chmod 755 /tmp
-
-USER notebook
-
+RUN adduser -ms /bin/bash notebook
 COPY . /tmp/src
+RUN chown -R notebook:notebook /tmp && chmod 755 /tmp
+USER notebook
 
 RUN rm -rf /tmp/src/.git* && \
     chmod -R g+w /tmp/src && \
