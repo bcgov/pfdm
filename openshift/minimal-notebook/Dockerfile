@@ -12,7 +12,7 @@ RUN rm -rf /tmp/src/.git* && \
     mv /tmp/src/.s2i/bin /tmp/scripts   
     
 RUN chown -R 1001:0 /tmp/scripts && \
-    chmod +x 1001:0 /tmp/scripts && \
+    chmod +x /tmp/scripts && \
     ls -l /tmp/scripts
 
 USER 1001
