@@ -33,6 +33,5 @@ RUN chgrp -R 0 /opt/app-root/bin && \
     chmod 775 /opt/app-root/bin/setup-volume.sh && \
     ls -l /opt/app-root/bin/
 
-RUN chcon -t container_file_exec_t /opt/app-root/bin/setup-volume.sh
 
 CMD [ "/opt/app-root/builder/run" ]
