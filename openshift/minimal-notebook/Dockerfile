@@ -3,8 +3,6 @@ FROM centos/python-38-centos7:latest
 COPY . /tmp/src
 
 RUN rm -rf /tmp/src/.git* && \
-    chown -R notebook /tmp/src && \
-    chgrp -R notebook /tmp/src && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts   
