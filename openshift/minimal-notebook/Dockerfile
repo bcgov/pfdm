@@ -1,5 +1,7 @@
 FROM centos/python-38-centos7:latest
-RUN useradd -ms /bin/bash notebook && chown -R notebook:notebook /tmp && chmod 755 /tmp && chmod -R g+w /tmp/src
+USER root
+RUN adduser -ms /bin/bash notebook && chown -R notebook:notebook /tmp && chmod 755 /tmp && chmod -R g+w /tmp/src
+
 USER notebook
 
 COPY . /tmp/src
