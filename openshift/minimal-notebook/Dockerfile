@@ -1,22 +1,15 @@
 FROM centos/python-38-centos7:latest
-
-USER root
+RUN useradd -ms /bin/bash notebook && chown -R notebook:notebook /tmp && chmod 755 /tmp && chmod -R g+w /tmp/src
+USER notebook
 
 COPY . /tmp/src
 
 RUN rm -rf /tmp/src/.git* && \
-    chown -R 1001 /tmp/src && \
-    chgrp -R 0 /tmp/src && \
-    chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts   
     
 RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
-
-USER 1001
-
-RUN ls -l /tmp/scripts
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -26,11 +19,6 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
 
 RUN /tmp/scripts/assemble
 
-USER root
-RUN /opt/app-root/bin/setup-volume.sh /opt/app-root /mnt/app-root
-RUN chgrp -R 0 /opt/app-root/bin && \
-    chmod -R g=u /opt/app-root/bin/ && \
-    chmod 775 /opt/app-root/bin/setup-volume.sh && \
-    ls -l /opt/app-root/bin/
+RUN ls -l /opt/app-root/bin/
 
 CMD [ "/opt/app-root/builder/run" ]
