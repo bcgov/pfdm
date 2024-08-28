@@ -121,12 +121,12 @@ rm -rf /tmp/src
 
 # Fixup permissions on directories and files.
 
-# fix-permissions /opt/app-root
-# fix-permissions /opt/app-root/bin
-# fix-permissions /opt/app-root/bin/setup-volume.sh 
+fix-permissions /opt/app-root
+fix-permissions /opt/app-root/bin
+fix-permissions /opt/app-root/bin/setup-volume.sh 
 
 # chmod -R +x /opt/app-root/bin
 
-# ls -l /opt/app-root
-# ls -l /opt/app-root/bin
-# ls -l /opt/app-root/bin/setup-volume.sh 
+ls -l /opt/app-root
+ls -l /opt/app-root/bin
+ls -l /opt/app-root/bin/setup-volume.sh 
