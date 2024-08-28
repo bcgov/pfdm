@@ -1,8 +1,6 @@
 FROM centos/python-38-centos7:latest
-USER root
-RUN adduser -ms /bin/bash notebook
+
 COPY . /tmp/src
-RUN chown -R notebook:notebook /tmp
 
 RUN rm -rf /tmp/src/.git* && \
     chown -R notebook /tmp/src && \
