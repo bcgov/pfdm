@@ -2,8 +2,7 @@ FROM centos/python-38-centos7:latest
 USER root
 RUN adduser -ms /bin/bash notebook
 COPY . /tmp/src
-RUN chown -R notebook:notebook /tmp && chmod 755 /tmp
-USER notebook
+RUN chown -R notebook:notebook /tmp
 
 RUN rm -rf /tmp/src/.git* && \
     chmod -R g+w /tmp/src && \
@@ -21,6 +20,9 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
 
 RUN /tmp/scripts/assemble
 
+RUN chown -R notebook:notebook /opt/app-root/
+
+USER notebook
 RUN chmod -R +x /opt/app-root/bin/ && \
     ls -l /opt/app-root/bin/
 
