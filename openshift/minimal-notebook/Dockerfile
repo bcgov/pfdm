@@ -26,7 +26,10 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
 
 RUN /tmp/scripts/assemble
 
-RUN chmod +x /opt/app-root/bin/setup-volume.sh && \
-    ls -l /opt/app-root/bin/setup-volume.sh 
+
+
+RUN chgrp -R 0 /opt/app-root/bin && \
+    chmod -R g=u /opt/app-root/bin/ && \
+    chmod 775 /opt/app-root/bin/setup-volume.sh 
 
 CMD [ "/opt/app-root/builder/run" ]
