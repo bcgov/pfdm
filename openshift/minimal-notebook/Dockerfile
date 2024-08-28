@@ -16,9 +16,6 @@ RUN chmod +x /tmp/scripts/assemble && \
 
 RUN /tmp/scripts/assemble
 
-USER notebook
-
-RUN chown -R notebook:notebook /opt/app-root/bin/*.sh
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
