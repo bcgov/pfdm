@@ -18,7 +18,7 @@ RUN /tmp/scripts/assemble
 
 USER notebook
 
-RUN chown -R notebook:notebook /opt/app-root/bin
+RUN chown -R notebook:notebook /opt/app-root/bin/*.sh
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -26,7 +26,7 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.tags="builder,jupyter" \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
-RUN chmod -R +x /opt/app-root/bin/ && \
+RUN chmod -R +x /opt/app-root/bin/*.sh && \
     ls -l /opt/app-root/bin/
 
 CMD [ "/opt/app-root/builder/run" ]
