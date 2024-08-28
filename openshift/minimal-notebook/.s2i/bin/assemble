@@ -52,7 +52,6 @@ mv /tmp/src/supervisor /opt/app-root/etc/supervisor
 mv /tmp/src/gateway /opt/app-root/gateway
 
 mv /tmp/src/*.sh /opt/app-root/bin
-chmod -R +x /opt/app-root/bin
 
 # Install oc command line client for OpenShift cluster.
 
@@ -122,4 +121,10 @@ rm -rf /tmp/src
 
 # Fixup permissions on directories and files.
 
-# fix-permissions /opt/app-root
+fix-permissions /opt/app-root
+ls -l /opt/app-root
+ls -l /opt/app-root/bin/setup-volume.sh 
+
+chmod -R +x /opt/app-root/bin
+chmod +x /opt/app-root/bin/setup-volume.sh
+ls -l /opt/app-root/bin/setup-volume.sh 
