@@ -95,15 +95,12 @@ objects:
         type: Git
         git:
           uri: ${REPO_NAME}
-          ref: ${REPO_BRANCH}
+          ref: notebook-deployment
         contextDir: openshift/minimal-notebook
       strategy:
-        type: Source
-        sourceStrategy:
-          from:
-            kind: ImageStreamTag
-            name: 'python:3.8'
-            namespace: openshift
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
       output:
         to:
           kind: ImageStreamTag
