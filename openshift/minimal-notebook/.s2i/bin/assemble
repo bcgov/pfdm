@@ -43,18 +43,17 @@ cp /tmp/src/httpd-webdav.conf /opt/app-root/etc/
 
 mkdir -p /tmp/.s2i
 
-mv /tmp/src/builder/image_metadata.json /tmp/.s2i/image_metadata.json
+cp /tmp/src/builder/image_metadata.json /tmp/.s2i/image_metadata.json
 
-mv /tmp/src/builder /opt/app-root/builder
+cp /tmp/src/builder /opt/app-root/builder
 
-mv /tmp/src/supervisor /opt/app-root/etc/supervisor
+cp /tmp/src/supervisor /opt/app-root/etc/supervisor
 
-mv /tmp/src/gateway /opt/app-root/gateway
+cp /tmp/src/gateway /opt/app-root/gateway
 
-rm -f /opt/app-root/bin/setup-volume.sh
 ls -l /opt/app-root/bin/
 
-mv /tmp/src/*.sh /opt/app-root/bin
+cp /tmp/src/*.sh /opt/app-root/bin
 
 # Install oc command line client for OpenShift cluster.
 
