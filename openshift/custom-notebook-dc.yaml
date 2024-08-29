@@ -52,10 +52,8 @@ objects:
           initContainers: 
             - name: setup-volume
               image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
-              command: 
-              - ../bin/setup-volume.sh
-              - /opt/app-root
-              - /mnt/app-root
+              imagePullPolicy: Always
+              command: ["setup-volume.sh", "/opt/app-root", "/mnt/app-root"]
               resources:
                 limits:
                   memory: 256Mi
@@ -64,10 +62,10 @@ objects:
                   mountPath: /mnt
           containers:
             - image: image-registry.openshift-image-registry.svc:5000/${BUILD_NAMESPACE}/${NOTEBOOK_IMAGE}
+              imagePullPolicy: Always
               volumeMounts:
                 - name: data
-                  mountPath: /opt/app-root
-                  subpath: app-root
+                  mountPath: /mnt
               name: notebook
               automountServiceAccountToken: false
               ports:

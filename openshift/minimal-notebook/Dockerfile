@@ -1,1 +1,39 @@
-Dockerfile-py38
+FROM centos/python-38-centos7:latest
+
+USER root
+
+COPY . /tmp/src
+
+RUN rm -rf /tmp/src/.git* && \
+    chown -R 1001 /tmp/src && \
+    chgrp -R 0 /tmp/src && \
+    chmod -R g+w /tmp/src && \
+    rm -rf /tmp/scripts && \
+    cp -r /tmp/src/.s2i/bin /tmp/scripts
+
+RUN chmod +x /tmp/scripts/assemble && \
+    ls -l /tmp/scripts
+
+
+    
+LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
+      io.k8s.display-name="Jupyter Notebook" \
+      io.openshift.expose-services="8080:http" \
+      io.openshift.tags="builder,jupyter" \
+      io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
+
+RUN /tmp/scripts/assemble
+
+RUN chgrp -R 0 /opt/app-root/bin && \
+    chgrp -R 0 /opt/app-root && \
+    chmod -R g=u /opt/app-root && \
+    chmod -R g=u /opt/app-root/bin && \
+    chmod -R +x /opt/app-root/bin && \
+    chmod -R +x /opt/app-root/builder && \
+    chmod -R +x /opt/app-root/gateway && \
+    chmod -R +x /opt/app-root/etc && \
+    ls -l /opt/app-root/bin
+
+USER 1001
+
+CMD [ "/opt/app-root/builder/run" ]
