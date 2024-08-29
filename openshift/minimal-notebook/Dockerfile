@@ -14,7 +14,7 @@ RUN rm -rf /tmp/src/.git* && \
 RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
 
-USER 1001
+
     
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -30,5 +30,7 @@ RUN chgrp -R 0 /opt/app-root/bin && \
     chmod -R g=u /opt/app-root/bin && \
     chmod -R +x /opt/app-root/bin && \
     ls -l /opt/app-root/bin
+
+USER 1001
 
 CMD [ "/opt/app-root/builder/run" ]
