@@ -53,8 +53,6 @@ cp -r /tmp/src/gateway /opt/app-root/gateway
 
 cp /tmp/src/*.sh /opt/app-root/bin
 
-echo "echo test" >> test.sh
-cp test.sh /opt/app-root/bin
 ls -l /opt/app-root/bin/
 
 # Install oc command line client for OpenShift cluster.
