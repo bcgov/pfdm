@@ -28,6 +28,7 @@ RUN chgrp -R 0 /opt/app-root/bin && \
     chgrp -R 0 /opt/app-root && \
     chmod -R g=u /opt/app-root && \
     chmod -R g=u /opt/app-root/bin && \
+    chmod -R +x /opt/app-root/bin && \
     ls -l /opt/app-root/bin
 
 CMD [ "/opt/app-root/builder/run" ]
