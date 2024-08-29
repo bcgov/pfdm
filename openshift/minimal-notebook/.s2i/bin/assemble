@@ -51,7 +51,8 @@ mv /tmp/src/supervisor /opt/app-root/etc/supervisor
 
 mv /tmp/src/gateway /opt/app-root/gateway
 
-rm -f /opt/app-root/bin/*.sh
+rm -f /opt/app-root/bin/setup-volume.sh
+ls -l /opt/app-root/bin/
 
 mv /tmp/src/*.sh /opt/app-root/bin
 
