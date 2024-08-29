@@ -29,6 +29,9 @@ RUN chgrp -R 0 /opt/app-root/bin && \
     chmod -R g=u /opt/app-root && \
     chmod -R g=u /opt/app-root/bin && \
     chmod -R +x /opt/app-root/bin && \
+    chmod -R +x /opt/app-root/builder && \
+    chmod -R +x /opt/app-root/gateway && \
+    chmod -R +x /opt/app-root/etc && \
     ls -l /opt/app-root/bin
 
 USER 1001
