@@ -45,11 +45,11 @@ mkdir -p /tmp/.s2i
 
 cp /tmp/src/builder/image_metadata.json /tmp/.s2i/image_metadata.json
 
-cp /tmp/src/builder /opt/app-root/builder
+cp -r /tmp/src/builder /opt/app-root/builder
 
-cp /tmp/src/supervisor /opt/app-root/etc/supervisor
+cp -r /tmp/src/supervisor /opt/app-root/etc/supervisor
 
-cp /tmp/src/gateway /opt/app-root/gateway
+cp -r /tmp/src/gateway /opt/app-root/gateway
 
 ls -l /opt/app-root/bin/
 

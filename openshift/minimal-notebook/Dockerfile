@@ -9,7 +9,7 @@ RUN rm -rf /tmp/src/.git* && \
     chgrp -R 0 /tmp/src && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
-    cp /tmp/src/.s2i/bin /tmp/scripts
+    cp -r /tmp/src/.s2i/bin /tmp/scripts
 
 RUN chmod +x /tmp/scripts/assemble && \
     ls -l /tmp/scripts
