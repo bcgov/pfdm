@@ -65,7 +65,8 @@ objects:
               imagePullPolicy: Always
               volumeMounts:
                 - name: data
-                  mountPath: /mnt
+                  mountPath: /opt/app-root
+                  subPath: app-root
               name: notebook
               automountServiceAccountToken: false
               ports:
