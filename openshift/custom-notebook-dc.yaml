@@ -84,25 +84,25 @@ objects:
               env:
               - name: JUPYTER_NOTEBOOK_PASSWORD
                 value: "${NOTEBOOK_PASSWORD}"
-              # - name: DB_PORT
-              #   value: "$(PFDM_PATRONI_MASTER_SERVICE_PORT)"
-              # - name: DB_HOST
-              #   value: "$(PFDM_PATRONI_MASTER_SERVICE_HOST)"
-              # - name: DB_USER
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: pfdm-patroni-creds
-              #       key: database-user
-              # - name: DB_PASSWORD
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: pfdm-patroni-creds
-              #       key: database-password
-              # - name: DB_NAME
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: pfdm-patroni-creds
-              #       key: database-name 
+              - name: DB_PORT
+                value: "$(PFDM_PATRONI_MASTER_SERVICE_PORT)"
+              - name: DB_HOST
+                value: "$(PFDM_PATRONI_MASTER_SERVICE_HOST)"
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-user
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-password
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: pfdm-patroni-creds
+                    key: database-name 
   - apiVersion: route.openshift.io/v1
     kind: Route
     spec:
