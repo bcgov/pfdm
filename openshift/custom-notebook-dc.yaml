@@ -121,6 +121,8 @@ objects:
       labels:
         deploymentconfig: ${NAME}
         app: ${NAME}
+    annotations:
+      haproxy.router.openshift.io/ip_whitelist: 142.22.0.0/12 142.32.0.0/12 142.35.0.0/12
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata: 
